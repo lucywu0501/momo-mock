@@ -32,3 +32,8 @@
 - CartItemRow（數量 stepper、移除）＋總計側欄（sticky）＋空車狀態；結帳按鈕以 mock 提示標明刻意不做。
 - RTL 互動測試 2 支鎖行為（加入→badge+1、stepper 下限 disabled）。
 - Agent 驗證：調數量 MiniCart 即時同步（2 件 $3,380）、重整後購物車持久（localStorage）；截圖 docs/checks/task6-cart.jpeg。
+
+## Task 7a — 延伸目標 /discover（架構可擴充性驗證）
+- 核心 9 分鐘內完成、視窗充裕 → 執行延伸目標：新增 features/discover/＋DiscoverPage＋一條路由，既有程式碼零修改（僅 router 加 2 行）。
+- 邊界規則實踐：discover 需要 ProductSummary 型別時，不直接 import features/products——改由 services/api 把共用領域型別 re-export，feature 間依然零相互依賴。
+- 截圖 docs/checks/task7-discover.jpeg。

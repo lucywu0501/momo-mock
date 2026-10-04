@@ -56,3 +56,6 @@ export const api = {
     ]
   },
 }
+
+// 跨 feature 共用的領域型別由 service 邊界 re-export，維持「feature 之間不互相 import」規則
+export type { Category, HomeSection, Page, Product, ProductSummary, SearchParams, SortKey } from '../features/products/types'
