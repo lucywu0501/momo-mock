@@ -52,7 +52,8 @@ export default function RootLayout() {
       </main>
       <MiniCart />
       <footer className="mt-12 border-t bg-white py-6 text-center text-xs text-gray-400">
-        momo mock — Frontend take-home（純前端練習，非商業用途）
+        <p>momo mock — Frontend take-home（純前端練習，非商業用途）</p>
+        <Link to="/stats" className="mt-1 inline-block underline hover:text-momo">站內統計</Link>
       </footer>
     </div>
   )

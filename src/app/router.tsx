@@ -8,6 +8,7 @@ const SearchPage = lazy(() => import('../pages/SearchPage'))
 const GoodsPage = lazy(() => import('../pages/GoodsPage'))
 const CartPage = lazy(() => import('../pages/CartPage'))
 const DiscoverPage = lazy(() => import('../pages/DiscoverPage'))
+const StatsPage = lazy(() => import('../pages/StatsPage'))
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'))
 
 export const router = createBrowserRouter([
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { path: 'goods/:goodsId', element: <GoodsPage /> },
       { path: 'cart', element: <CartPage /> },
       { path: 'discover', element: <DiscoverPage /> },
+      { path: 'stats', element: <StatsPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
