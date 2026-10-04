@@ -1,0 +1,26 @@
+name: Bug report
+description: 回報功能異常
+labels: [needs-triage]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: 發生了什麼？
+      description: 實際行為與預期行為的差異
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 重現步驟
+      placeholder: |
+        1. 開啟 /search/3c
+        2. 點擊 …
+        3. 看到 …
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: 環境
+      placeholder: 瀏覽器與版本、作業系統、demo 網址或本機

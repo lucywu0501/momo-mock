@@ -1,6 +1,25 @@
 # momo mock — Frontend Take-home（題目 A：Mocking momoshop）
 
+[![CI](https://github.com/lucywu0501/momo-mock/actions/workflows/ci.yml/badge.svg)](https://github.com/lucywu0501/momo-mock/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/lucywu0501/momo-mock?label=release)](https://github.com/lucywu0501/momo-mock/releases)
+[![Live Demo](https://img.shields.io/badge/demo-GitHub%20Pages-ec008c)](https://lucywu0501.github.io/momo-mock/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![semantic-release](https://img.shields.io/badge/semantic--release-conventional%20commits-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+
 純前端模擬 momo 購物網：首頁、搜尋（篩選/排序/分頁）、商品詳情、購物車、發現頁。無任何真實 API 呼叫。
+
+## 線上 Demo
+
+**👉 https://lucywu0501.github.io/momo-mock/**
+
+每次 merge 到 `main` 並通過 CI 後，GitHub Actions 會自動重新部署，網址內容永遠對應 `main` 最新版。可直接試：
+
+- 首頁：[`/`](https://lucywu0501.github.io/momo-mock/)
+- 搜尋：[`/search/3c`](https://lucywu0501.github.io/momo-mock/search/3c)（篩選/排序/分頁都在 URL 上，可直接分享）
+- 購物車：[`/cart`](https://lucywu0501.github.io/momo-mock/cart)（localStorage 持久化，重整不丟）
+- 發現頁：[`/discover`](https://lucywu0501.github.io/momo-mock/discover)
+
+版本紀錄見 [Releases](https://github.com/lucywu0501/momo-mock/releases) 與 [`CHANGELOG.md`](CHANGELOG.md)。
 
 **Stack**：Vite 8・React 19・TypeScript・React Router v8・TanStack Query v5・Tailwind CSS v4・Vitest + React Testing Library・oxlint
 
@@ -13,6 +32,18 @@ npm test         # 15 個單元＋互動測試
 npm run lint     # oxlint
 npm run build    # tsc -b && vite build
 ```
+
+## CI / 發版 / 部署
+
+全部由 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) 一條 workflow 處理，三個 job：
+
+| Job | 觸發 | 做什麼 |
+|---|---|---|
+| `check` | PR、push `main` | `npm run lint` → `npm test` → `npm run build` |
+| `release` | push `main` 且 `check` 通過 | [semantic-release](https://semantic-release.gitbook.io/) 依 Conventional Commits 算版號、寫 `CHANGELOG.md`、打 tag、建 GitHub Release |
+| `deploy` | push `main` 且 `check` 通過 | 以 `VITE_BASE=/momo-mock/` 建置並部署到 GitHub Pages |
+
+版號由 commit 前綴決定（`feat` → minor、`fix` → patch、`BREAKING CHANGE` → major），不需手動改 version 或打 tag。commit 規範與貢獻流程見 [`CONTRIBUTING.md`](CONTRIBUTING.md)。
 
 ## 架構總覽
 
@@ -74,4 +105,4 @@ src/
 
 ## 演進方向
 
-MSW 取代手寫 mock → Next.js SSR/SSG（SEO/LCP）→ Radix/Headless UI 補 a11y 複雜元件 → Playwright E2E 進 CI → ESLint/oxlint boundary rule 強制 feature 邊界 → `/live`（WebSocket mock＋隔離的 video feature）→ 會員與訂單領域。
+MSW 取代手寫 mock → Next.js SSR/SSG（SEO/LCP）→ Radix/Headless UI 補 a11y 複雜元件 → Playwright E2E 進 CI（CI/semantic-release/Pages 已就位）→ ESLint/oxlint boundary rule 強制 feature 邊界 → `/live`（WebSocket mock＋隔離的 video feature）→ 會員與訂單領域。
