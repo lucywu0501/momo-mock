@@ -27,6 +27,8 @@ export type SortKey = 'relevance' | 'priceAsc' | 'priceDesc'
 export interface SearchParams {
   keyword: string
   category?: CategoryId
+  brand?: string
+  tag?: string
   minPrice?: number
   maxPrice?: number
   sort?: SortKey
@@ -42,3 +44,10 @@ export interface Page<T> {
 }
 
 export interface HomeSection { id: string; title: string; products: ProductSummary[] }
+
+export interface FacetCount { value: string; label: string; count: number }
+
+/** 搜尋結果：分頁＋facet 數量（數量依「其他」已選條件連動，與真站 attributesListArea 行為一致） */
+export interface SearchResult extends Page<ProductSummary> {
+  facets: { categories: FacetCount[]; brands: FacetCount[]; tags: FacetCount[] }
+}

@@ -10,6 +10,8 @@ export function useSearch() {
   const params: SearchParams = {
     keyword: decodeURIComponent(keyword),
     category: (sp.get('cate') as CategoryId) ?? undefined,
+    brand: sp.get('brand') ?? undefined,
+    tag: sp.get('tag') ?? undefined,
     minPrice: sp.get('min') ? Number(sp.get('min')) : undefined,
     maxPrice: sp.get('max') ? Number(sp.get('max')) : undefined,
     sort: (sp.get('sort') as SortKey) ?? 'relevance',
@@ -24,6 +26,8 @@ export function useSearch() {
   const setParam = (patch: Partial<Omit<SearchParams, 'keyword'>>) => {
     const next = new URLSearchParams(sp)
     if ('category' in patch) { if (patch.category) next.set('cate', patch.category); else next.delete('cate') }
+    if ('brand' in patch) { if (patch.brand) next.set('brand', patch.brand); else next.delete('brand') }
+    if ('tag' in patch) { if (patch.tag) next.set('tag', patch.tag); else next.delete('tag') }
     if ('minPrice' in patch) { if (patch.minPrice != null) next.set('min', String(patch.minPrice)); else next.delete('min') }
     if ('maxPrice' in patch) { if (patch.maxPrice != null) next.set('max', String(patch.maxPrice)); else next.delete('max') }
     if ('sort' in patch) { if (patch.sort && patch.sort !== 'relevance') next.set('sort', patch.sort); else next.delete('sort') }

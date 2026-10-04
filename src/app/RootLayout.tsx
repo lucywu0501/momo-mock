@@ -22,11 +22,16 @@ export default function RootLayout() {
       </div>
       <header className="sticky top-0 z-20 bg-white shadow-sm">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
-          <Link to="/" className="shrink-0 text-3xl font-black italic text-momo">momo</Link>
-          <form onSubmit={submit} className="flex max-w-xl flex-1 overflow-hidden rounded-full border-2 border-momo">
-            <input value={kw} onChange={e => setKw(e.target.value)} placeholder="請輸入關鍵字"
-              className="min-w-0 flex-1 px-4 py-1.5 outline-none" />
-            <button aria-label="搜尋" className="bg-momo px-5 text-white"><Search size={18} /></button>
+          <Link to="/" className="flex shrink-0 flex-col items-start leading-none">
+            <span className="text-3xl font-black tracking-tight text-momo" style={{ fontFamily: "'Arial Rounded MT Bold', 'Hiragino Maru Gothic ProN', system-ui" }}>momo</span>
+            <span className="text-[11px] font-bold text-momo">全站超取$290免運 ✦</span>
+          </Link>
+          <form onSubmit={submit} className="flex max-w-xl flex-1 overflow-hidden rounded-full border border-gray-300 bg-gray-100 focus-within:border-gray-500">
+            <input value={kw} onChange={e => setKw(e.target.value)} placeholder="請輸入關鍵字或品號"
+              className="min-w-0 flex-1 bg-transparent px-4 py-1.5 outline-none" />
+            <button aria-label="搜尋" className="flex items-center gap-1 rounded-full bg-gray-600 px-6 font-bold text-white hover:bg-gray-700">
+              <Search size={16} />搜尋
+            </button>
           </form>
           <Link to="/cart" aria-label="購物車" className="relative shrink-0 text-gray-600">
             <ShoppingCart />

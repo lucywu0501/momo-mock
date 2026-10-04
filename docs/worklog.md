@@ -48,3 +48,9 @@
 - 新增 momo 式類別導覽列（app/CategoryNav，NavLink active 桃紅底線、窄螢幕橫向捲動）。
 - 商品卡向真站看齊：星數評價（確定性 mock）＋折數 badge；卡片加 CSS content-visibility:auto（離屏卡片跳過 render，56 筆規模下比引入 react-window 划算——windowing 列入演進方向）。
 - 分頁維持與真站桌面版一致（使用者確認網站版做分頁；mobile 無限捲動列入演進方向）。
+
+## Task 9 — 使用者驗收回饋修正（round 2）
+- 以 DevTools 實地檢查真站 attributesListArea：分類/品牌/類型/尺寸/功能（帶連動數量）。對應實作 faceted search：mock service 計算 facets（每個 facet 忽略自身已選、受其他條件連動——與真站行為一致），FilterPanel 呈現分類/品牌/優惠三列＋價格。
+- Mock data 擴充 56 → 168 筆（每分類三代 ''/Pro/Plus），讓分頁實際出現；Pagination 改為永遠顯示（單頁時按鈕 disabled，與真站一致）。
+- Header 對齊真站：灰底搜尋框＋深灰「搜尋」按鈕、logo 加 tagline「全站超取$290免運」。
+- 新增 facet 單元測試（16 tests 全綠）；Agent 驗證分頁 URL 同步與 facet 連動（docs/checks/task9-search-facets.jpeg）。

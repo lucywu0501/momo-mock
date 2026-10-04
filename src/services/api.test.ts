@@ -12,8 +12,8 @@ describe('searchProducts', () => {
   })
   it('空關鍵字回傳全部商品', async () => {
     const page = await api.searchProducts({ keyword: '' })
-    expect(page.total).toBe(56)
-    expect(page.totalPages).toBe(Math.ceil(56 / PAGE_SIZE))
+    expect(page.total).toBe(168)
+    expect(page.totalPages).toBe(Math.ceil(168 / PAGE_SIZE))
   })
   it('支援分類與價格區間過濾', async () => {
     const page = await api.searchProducts({ keyword: '', category: '3c', maxPrice: 2000 })
@@ -28,7 +28,15 @@ describe('searchProducts', () => {
   it('超出範圍的頁碼回空陣列但 total 不變', async () => {
     const page = await api.searchProducts({ keyword: '', page: 999 })
     expect(page.items).toEqual([])
-    expect(page.total).toBe(56)
+    expect(page.total).toBe(168)
+  })
+})
+
+describe('facets', () => {
+  it('facet 數量忽略自身已選、受其他條件影響', async () => {
+    const r = await api.searchProducts({ keyword: '', category: '3c' })
+    expect(r.facets.brands.reduce((s, b) => s + b.count, 0)).toBe(21) // 3c 分類共 21 筆
+    expect(r.facets.categories.length).toBe(8)                        // 分類 facet 忽略自身選擇
   })
 })
 

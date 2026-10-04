@@ -25,10 +25,12 @@ const BRANDS: Record<CategoryId, string[]> = {
   home: ['好室集', 'NITORI 風', '木質研'], baby: ['mamaCare', '貝親選', 'KIDDO'],
 }
 
+const GENERATIONS = ['', ' Pro', ' Plus']
+
 function makeProduct(cat: CategoryId, i: number): Product {
   const id = `${cat}-${i + 1}`
   const brand = BRANDS[cat][i % 3]
-  const name = NAMES[cat][i]
+  const name = NAMES[cat][i % 7] + GENERATIONS[Math.floor(i / 7)]
   const price = 290 + ((i * 97 + cat.length * 31) % 48) * 100 // 確定性價格 290–4990
   const hasPromo = i % 3 !== 0
   const image = `https://picsum.photos/seed/${id}/400/400`
@@ -36,7 +38,7 @@ function makeProduct(cat: CategoryId, i: number): Product {
     id, brand, name: `【${brand}】${name}`, category: cat,
     price, listPrice: hasPromo ? Math.round(price * 1.25) : undefined,
     image, images: [image, `https://picsum.photos/seed/${id}-b/400/400`, `https://picsum.photos/seed/${id}-c/400/400`],
-    inStock: i !== 5, // 每分類第 6 筆缺貨（驗證邊界 UI）
+    inStock: i % 7 !== 5, // 每代第 6 筆缺貨（驗證邊界 UI）
     rating: Math.round((3.5 + ((i * 7 + cat.length) % 15) / 10) * 10) / 10,
     reviews: (i * 137 + cat.length * 53) % 2000,
     tags: hasPromo ? (i % 2 === 0 ? ['限時下殺'] : ['免運']) : [],
@@ -46,5 +48,5 @@ function makeProduct(cat: CategoryId, i: number): Product {
 }
 
 export const PRODUCTS: Product[] = CATEGORIES.flatMap(c =>
-  Array.from({ length: 7 }, (_, i) => makeProduct(c.id, i)),
+  Array.from({ length: 21 }, (_, i) => makeProduct(c.id, i)),
 )

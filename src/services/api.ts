@@ -1,4 +1,4 @@
-import type { Category, HomeSection, Page, Product, ProductSummary, SearchParams } from '../features/products/types'
+import type { Category, FacetCount, HomeSection, Product, ProductSummary, SearchParams, SearchResult } from '../features/products/types'
 import { CATEGORIES, PRODUCTS } from './mock/data'
 import { delay } from './mock/delay'
 
@@ -10,18 +10,37 @@ export class NotFoundError extends Error {
 
 const toSummary = ({ images: _i, specs: _s, variant: _v, ...summary }: Product): ProductSummary => summary
 
-function matches(p: Product, { keyword, category, minPrice, maxPrice }: SearchParams): boolean {
+function matches(p: Product, { keyword, category, brand, tag, minPrice, maxPrice }: SearchParams): boolean {
   const kw = keyword.trim()
   const catName = CATEGORIES.find(c => c.id === p.category)?.name ?? ''
   if (kw && !(p.name.includes(kw) || p.brand.includes(kw) || catName.includes(kw))) return false
   if (category && p.category !== category) return false
+  if (brand && p.brand !== brand) return false
+  if (tag && !p.tags.includes(tag)) return false
   if (minPrice != null && p.price < minPrice) return false
   if (maxPrice != null && p.price > maxPrice) return false
   return true
 }
 
+/** facet 數量計算：忽略該 facet 自身的已選值（與真站 attributesListArea 連動行為一致） */
+function countBy(hits: Product[], keys: (p: Product) => string[], label: (v: string) => string): FacetCount[] {
+  const m = new Map<string, number>()
+  for (const p of hits) for (const k of keys(p)) m.set(k, (m.get(k) ?? 0) + 1)
+  return [...m.entries()].map(([value, count]) => ({ value, label: label(value), count }))
+    .sort((a, b) => b.count - a.count)
+}
+
+function buildFacets(params: SearchParams): SearchResult['facets'] {
+  const omit = (key: 'category' | 'brand' | 'tag') => PRODUCTS.filter(p => matches(p, { ...params, [key]: undefined }))
+  return {
+    categories: countBy(omit('category'), p => [p.category], v => CATEGORIES.find(c => c.id === v)?.name ?? v),
+    brands: countBy(omit('brand'), p => [p.brand], v => v),
+    tags: countBy(omit('tag'), p => p.tags, v => v),
+  }
+}
+
 export const api = {
-  async searchProducts(params: SearchParams): Promise<Page<ProductSummary>> {
+  async searchProducts(params: SearchParams): Promise<SearchResult> {
     await delay()
     let hits = PRODUCTS.filter(p => matches(p, params))
     if (params.sort === 'priceAsc') hits = [...hits].sort((a, b) => a.price - b.price)
@@ -32,6 +51,7 @@ export const api = {
       items: hits.slice(start, start + PAGE_SIZE).map(toSummary),
       total: hits.length, page, pageSize: PAGE_SIZE,
       totalPages: Math.ceil(hits.length / PAGE_SIZE),
+      facets: buildFacets(params),
     }
   },
 
@@ -58,4 +78,4 @@ export const api = {
 }
 
 // 跨 feature 共用的領域型別由 service 邊界 re-export，維持「feature 之間不互相 import」規則
-export type { Category, HomeSection, Page, Product, ProductSummary, SearchParams, SortKey } from '../features/products/types'
+export type { Category, FacetCount, HomeSection, Page, Product, ProductSummary, SearchParams, SearchResult, SortKey } from '../features/products/types'
