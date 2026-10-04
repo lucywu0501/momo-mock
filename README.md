@@ -96,12 +96,12 @@ e2e/          # Playwright 跨 feature 流程測試（不屬於任何單一 feat
 1. **純邏輯單測**：cart reducer、mock service 的 filter/sort/分頁語意、analytics ring buffer、stats 彙總（先紅後綠，TDD）
 2. **元件行為測試**：加入購物車 → badge +1 並記錄事件、數量 stepper 下限保護、router 錯誤畫面記錄 error 事件、長條圖等比與空狀態
 3. **Agent 視覺驗證迴圈**：每階段由 Claude Code 開瀏覽器截圖，與 `docs/momo-ref/` 真站截圖對照（版面骨架、RWD 斷點、互動流程），紀錄於 `docs/worklog.md`、截圖存 `docs/checks/`
-4. **CI 自動驗證**：每次 push 跑 `check`（oxlint＋vitest＋tsc＋build）與 `e2e`（Playwright 對 production preview 跑購物主流程、URL 即狀態、錯誤路徑，含 localStorage 事件斷言）；兩者綠燈後才 release 與部署 Pages。E2E 失敗自動上傳 trace／HTML report 供回放
+4. **CI 自動驗證**：每次 push 到 `main` 與每個 PR 跑 `check`（oxlint＋vitest＋tsc＋build）與 `e2e`（Playwright 對 production preview 跑購物主流程、URL 即狀態、錯誤路徑，含 localStorage 事件斷言）；兩者綠燈後才 release 與部署 Pages。E2E 失敗自動上傳 trace／HTML report 供回放
 
 ## Observability
 
 - **產品分析**：`services/analytics.ts` 定義七種型別化 Analytics Event（`page_view`／`search`／`view_product`／`add_to_cart`／`remove_from_cart`／`checkout_click`／`error`），由 hooks／store／router 層發出，UI 元件不知情。mock sink 存 localStorage ring buffer（500 筆），儲存失敗（配額滿、隱私模式、內容損毀）靜默處理，不影響購物流程。
-- **統計頁 [`/stats`](https://lucywu0501.github.io/momo-mock/stats)**（Footer「站內統計」）：事件類型分布、熱門搜尋詞、零結果搜尋詞、加購最多商品、最近錯誤；純 CSS 長條圖、單一色相、數值 hover 可見；可清除紀錄。
+- **統計頁 [`/stats`](https://lucywu0501.github.io/momo-mock/stats)**（Footer「站內統計」）：事件類型分布、熱門搜尋詞、零結果搜尋詞、加購最多商品、最近錯誤；純 CSS 長條圖、單一色相、數值直接標示；訂閱 sink 即時更新；可清除紀錄。
 - **錯誤監控**：router `errorElement` 把 render 錯誤記為 `error` 事件，於 `/stats` 可見；真實專案對應 Sentry。
 - **Pipeline 可觀測性**：CI badge、Actions 失敗 artifact（Playwright trace）、Pages deployment 環境 URL、semantic-release 的 CHANGELOG。
 

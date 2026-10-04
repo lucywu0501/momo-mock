@@ -1,5 +1,5 @@
 import { useAnalyticsEvents } from '../features/stats/hooks/useAnalyticsEvents'
-import { countByType, recentErrors, topAddedProducts, topSearches, zeroResultSearches } from '../features/stats/aggregate'
+import { countByType, countOf, recentErrors, topAddedProducts, topSearches, zeroResultSearches } from '../features/stats/aggregate'
 import { BarList } from '../features/stats/components/BarList'
 import { Button } from '../shared/ui/Button'
 import { MAX_EVENTS } from '../services/analytics'
@@ -14,9 +14,8 @@ function Tile({ label, value }: { label: string; value: number }) {
 }
 
 export default function StatsPage() {
-  const { events, clear, refresh } = useAnalyticsEvents()
+  const { events, clear } = useAnalyticsEvents()
   const byType = countByType(events)
-  const get = (label: string) => byType.find(b => b.label === label)?.value ?? 0
   const errors = recentErrors(events)
 
   return (
@@ -28,17 +27,14 @@ export default function StatsPage() {
             Analytics Event 的 mock sink：資料只存於此瀏覽器 localStorage，保留最近 {MAX_EVENTS} 筆。接真 SDK 時只需替換 services/analytics.ts。
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={refresh}>重新整理</Button>
-          <Button variant="outline" onClick={clear}>清除紀錄</Button>
-        </div>
+        <Button variant="outline" onClick={clear}>清除紀錄</Button>
       </div>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <Tile label="事件總數" value={events.length} />
-        <Tile label="搜尋次數" value={get('搜尋')} />
-        <Tile label="加入購物車" value={get('加入購物車')} />
-        <Tile label="前端錯誤" value={get('前端錯誤')} />
+        <Tile label="搜尋次數" value={countOf(events, 'search')} />
+        <Tile label="加入購物車" value={countOf(events, 'add_to_cart')} />
+        <Tile label="前端錯誤" value={countOf(events, 'error')} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -56,8 +52,8 @@ export default function StatsPage() {
           <table className="w-full text-left text-sm">
             <thead className="text-xs text-gray-500"><tr><th className="py-1">時間</th><th>路徑</th><th>訊息</th></tr></thead>
             <tbody>
-              {errors.map(e => (
-                <tr key={e.timestamp} className="border-t">
+              {errors.map((e, i) => (
+                <tr key={`${e.timestamp}-${i}`} className="border-t">
                   <td className="py-1 tabular-nums">{new Date(e.timestamp).toLocaleString('zh-TW')}</td>
                   <td className="font-mono text-xs">{e.path}</td>
                   <td>{e.message}</td>

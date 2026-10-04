@@ -25,7 +25,8 @@ export function useSearch() {
     queryFn: () => api.searchProducts(params),
   })
 
-  // page 物件由 TanStack Query 結構共享，只有結果真的改變才會觸發；回上一頁拿快取不重複記
+  // 每次搜尋結果呈現記一筆（含回上一頁重新掛載、翻頁、換排序），語意同 GA4 的 view_search_results；
+  // 同一次掛載內 page 物件由 TanStack Query 結構共享，結果未變不會重複記
   useEffect(() => {
     if (!page) return
     analytics.track({

@@ -2,7 +2,7 @@ import type { Bar } from '../aggregate'
 
 /**
  * 單一序列的水平長條清單：不需圖例（標題即序列名）、細長條＋圓角端點、
- * 單一色相（momo 桃紅），標籤與數值用文字色而非序列色，hover 以 title 顯示數值。
+ * 單一色相（momo 桃紅），標籤與數值用文字色而非序列色；數值直接以文字欄呈現。
  */
 export function BarList({ title, bars, emptyText = '尚無資料' }: { title: string; bars: Bar[]; emptyText?: string }) {
   const max = Math.max(0, ...bars.map(b => b.value))
@@ -14,7 +14,7 @@ export function BarList({ title, bars, emptyText = '尚無資料' }: { title: st
       ) : (
         <ul className="flex flex-col gap-2">
           {bars.map(b => (
-            <li key={b.label} title={`${b.label}：${b.value}`}
+            <li key={b.label}
               className="grid grid-cols-[minmax(0,10rem)_1fr_3rem] items-center gap-3 text-sm">
               <span className="truncate text-gray-700">{b.label}</span>
               <span className="h-2 rounded-full bg-gray-100">

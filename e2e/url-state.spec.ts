@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test'
 test('直連帶 sort 的搜尋網址會還原排序，分頁與 URL 同步', async ({ page }) => {
   await page.goto('/search/3C?sort=priceAsc')
   await expect(page.getByText('共 21 件商品')).toBeVisible()
-  await expect(page.getByRole('button', { name: '價格由低到高' })).toHaveClass(/bg-momo/)
+  await expect(page.getByRole('button', { name: '價格由低到高' })).toHaveAttribute('aria-pressed', 'true')
 
   const grid = page.getByRole('main')
   const firstCard = grid.getByRole('link', { name: /【/ }).first()

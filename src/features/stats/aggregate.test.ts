@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { RecordedEvent } from '../../services/analytics'
-import { EVENT_LABELS, countByType, recentErrors, topAddedProducts, topSearches, zeroResultSearches } from './aggregate'
+import { EVENT_LABELS, countByType, countOf, recentErrors, topAddedProducts, topSearches, zeroResultSearches } from './aggregate'
 
 const t = (i: number) => 1_000 + i
 const events: RecordedEvent[] = [
@@ -59,5 +59,13 @@ describe('recentErrors', () => {
       { message: 'boom', path: '/x', timestamp: t(13) },
     ])
     expect(recentErrors(events, 1)).toHaveLength(1)
+  })
+})
+
+describe('countOf', () => {
+  it('依事件型別計數，無資料為 0', () => {
+    expect(countOf(events, 'add_to_cart')).toBe(3)
+    expect(countOf(events, 'search')).toBe(5)
+    expect(countOf([], 'error')).toBe(0)
   })
 })

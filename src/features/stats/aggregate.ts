@@ -23,6 +23,10 @@ function tally(entries: Iterable<[string, number]>, limit: number): Bar[] {
     .slice(0, limit)
 }
 
+export function countOf(events: RecordedEvent[], type: AnalyticsEventType): number {
+  return events.reduce((n, e) => (e.type === type ? n + 1 : n), 0)
+}
+
 export function countByType(events: RecordedEvent[]): Bar[] {
   const counts = new Map<AnalyticsEventType, number>()
   for (const e of events) counts.set(e.type, (counts.get(e.type) ?? 0) + 1)

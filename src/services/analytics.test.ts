@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
-  ANALYTICS_STORAGE_KEY, MAX_EVENTS, appendEvent, createLocalStorageSink, type RecordedEvent,
+  ANALYTICS_STORAGE_KEY, MAX_EVENTS, appendEvent, createLocalStorageSink, resolveStorage, type RecordedEvent,
 } from './analytics'
 
 const ev = (i: number): RecordedEvent => ({ type: 'page_view', path: `/p${i}`, timestamp: i })
@@ -64,5 +64,38 @@ describe('createLocalStorageSink', () => {
     sink.track({ type: 'page_view', path: '/' })
     sink.clear()
     expect(sink.list()).toEqual([])
+  })
+})
+
+describe('resolveStorage', () => {
+  it('localStorage getter 拋錯（Safari 封鎖所有 cookie）時回 null，而非拋錯', () => {
+    const spy = vi.spyOn(window, 'localStorage', 'get').mockImplementation(() => { throw new Error('SecurityError') })
+    expect(resolveStorage()).toBeNull()
+    spy.mockRestore()
+    expect(resolveStorage()).toBe(localStorage)
+  })
+})
+
+describe('createLocalStorageSink(null)', () => {
+  it('沒有 storage 時是 no-op sink：track 不拋錯、list 為空', () => {
+    const sink = createLocalStorageSink(null)
+    expect(() => sink.track({ type: 'page_view', path: '/' })).not.toThrow()
+    expect(sink.list()).toEqual([])
+    expect(() => sink.clear()).not.toThrow()
+  })
+})
+
+describe('subscribe', () => {
+  beforeEach(() => localStorage.clear())
+  it('track 與 clear 都會通知訂閱者，取消後不再通知', () => {
+    const sink = createLocalStorageSink(localStorage)
+    const listener = vi.fn()
+    const unsubscribe = sink.subscribe(listener)
+    sink.track({ type: 'page_view', path: '/' })
+    sink.clear()
+    expect(listener).toHaveBeenCalledTimes(2)
+    unsubscribe()
+    sink.track({ type: 'page_view', path: '/' })
+    expect(listener).toHaveBeenCalledTimes(2)
   })
 })

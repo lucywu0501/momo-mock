@@ -12,7 +12,7 @@ export function SortToolbar({ sort, total, onChange }: {
   return (
     <div className="flex flex-wrap items-center gap-1 rounded-lg border bg-white p-2 text-sm">
       {SORTS.map(s => (
-        <button key={s.key} onClick={() => onChange(s.key)}
+        <button key={s.key} onClick={() => onChange(s.key)} aria-pressed={sort === s.key}
           className={`rounded px-3 py-1 ${sort === s.key ? 'bg-momo text-white' : 'hover:bg-gray-100'}`}>
           {s.label}
         </button>

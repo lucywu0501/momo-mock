@@ -23,6 +23,8 @@ export interface AnalyticsSink {
   track(event: AnalyticsEvent): void
   list(): RecordedEvent[]
   clear(): void
+  /** 事件新增或清除時通知；回傳取消訂閱函式 */
+  subscribe(listener: () => void): () => void
 }
 
 export const ANALYTICS_STORAGE_KEY = 'momo-mock.analytics.v1'
@@ -40,11 +42,19 @@ const isRecordedEvent = (e: unknown): e is RecordedEvent =>
   && typeof (e as { type?: unknown }).type === 'string'
   && typeof (e as { timestamp?: unknown }).timestamp === 'number'
 
+/** 取得 localStorage；Safari「封鎖所有 cookie」等情境連 getter 都會拋錯，此時回 null 讓 sink 變成 no-op */
+export function resolveStorage(): Storage | null {
+  try { return typeof window === 'undefined' ? null : window.localStorage } catch { return null }
+}
+
 export function createLocalStorageSink(
-  storage: Storage,
+  storage: Storage | null,
   { now = Date.now, debug = false }: { now?: () => number; debug?: boolean } = {},
 ): AnalyticsSink {
+  const listeners = new Set<() => void>()
+  const notify = () => { for (const l of listeners) l() }
   const read = (): RecordedEvent[] => {
+    if (!storage) return []
     try {
       const parsed: unknown = JSON.parse(storage.getItem(ANALYTICS_STORAGE_KEY) ?? '[]')
       return Array.isArray(parsed) ? parsed.filter(isRecordedEvent) : []
@@ -53,6 +63,7 @@ export function createLocalStorageSink(
     }
   }
   const write = (events: RecordedEvent[]) => {
+    if (!storage) return
     try { storage.setItem(ANALYTICS_STORAGE_KEY, JSON.stringify(events)) } catch { /* 配額滿／隱私模式：分析不得影響購物流程 */ }
   }
   return {
@@ -60,13 +71,19 @@ export function createLocalStorageSink(
       const recorded: RecordedEvent = { ...event, timestamp: now() }
       if (debug) console.debug('[analytics]', recorded)
       write(appendEvent(read(), recorded))
+      notify()
     },
     list: read,
     clear() {
-      try { storage.removeItem(ANALYTICS_STORAGE_KEY) } catch { /* 同上 */ }
+      try { storage?.removeItem(ANALYTICS_STORAGE_KEY) } catch { /* 同上 */ }
+      notify()
+    },
+    subscribe(listener) {
+      listeners.add(listener)
+      return () => { listeners.delete(listener) }
     },
   }
 }
 
 // 只在 vite dev 印 console（vitest 的 MODE 是 'test'，不會洗版）
-export const analytics: AnalyticsSink = createLocalStorageSink(localStorage, { debug: import.meta.env.MODE === 'development' })
+export const analytics: AnalyticsSink = createLocalStorageSink(resolveStorage(), { debug: import.meta.env.MODE === 'development' })
