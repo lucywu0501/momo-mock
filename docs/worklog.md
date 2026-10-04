@@ -22,3 +22,8 @@
 ## Task 4 — 搜尋頁
 - useSearch：URL（path keyword＋query cate/min/max/sort/page）為狀態單一來源；任何篩選/排序變更自動回第 1 頁。
 - Agent 驗證：關鍵字過濾（耳機→2 件）、`?sort=priceAsc` 直連還原排序狀態且結果遞增、超範圍頁碼顯示空狀態（與 service 語意一致）；截圖 docs/checks/task4-search.jpeg。
+
+## Task 5 — 商品詳情頁
+- Gallery（縮圖切換）＋變體選擇＋數量＋加入購物車（badge/MiniCart/localStorage 三處同步、按鈕 1.5s 回饋）。
+- NotFoundError 顯示「此商品目前無展售」（對齊真站錯誤頁文案）；缺貨商品 CTA disabled。
+- Agent 驗證截圖 docs/checks/task5-goods.jpeg；與 momo-goods.jpeg 對照雙欄骨架一致。
