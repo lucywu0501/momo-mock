@@ -27,3 +27,8 @@
 - Gallery（縮圖切換）＋變體選擇＋數量＋加入購物車（badge/MiniCart/localStorage 三處同步、按鈕 1.5s 回饋）。
 - NotFoundError 顯示「此商品目前無展售」（對齊真站錯誤頁文案）；缺貨商品 CTA disabled。
 - Agent 驗證截圖 docs/checks/task5-goods.jpeg；與 momo-goods.jpeg 對照雙欄骨架一致。
+
+## Task 6 — 購物車頁
+- CartItemRow（數量 stepper、移除）＋總計側欄（sticky）＋空車狀態；結帳按鈕以 mock 提示標明刻意不做。
+- RTL 互動測試 2 支鎖行為（加入→badge+1、stepper 下限 disabled）。
+- Agent 驗證：調數量 MiniCart 即時同步（2 件 $3,380）、重整後購物車持久（localStorage）；截圖 docs/checks/task6-cart.jpeg。
