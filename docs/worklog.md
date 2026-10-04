@@ -75,3 +75,12 @@
 - 發現並修正兩個既有認知：(1) 真站**有** `/discover`（手機底部 tab「逛逛」，6 欄瀑布流商品卡），mock 的「發現好物」不是超出而是簡化；(2) 真站現為單一 RWD 站而非 Adaptive 雙站，但商品頁在 390 仍是 1220px 固定桌機版——mock 商品頁 RWD 反而是「超出」。
 - 其他關鍵觀察：真站搜尋 URL 已是 `/search/:keyword`（與 mock 一致）、商品頁已是 `/product/:id`（mock 的 `/goods` 對齊的是舊路徑）；未選規格按「放入購物車」會被「請選擇商品規格」阻擋，mock 預設第一個規格；手機搜尋頁為無限捲動且卡片改橫式。
 - 產出：`docs/parity.md`（區塊表 36 列＋流程表 20 列，五種狀態）、`docs/adr/0001-parity-scope-and-baseline.md`（四軸、非目標、一次性基準）、README 差異章節改為摘要＋連結。缺口四項（底部 tab bar、搜尋頁手機無限捲動、hero 觸控滑動、header 收合）記入「未來工作」，不開 issue、不實作。
+
+## Task 14 — Validation / Observability：CI E2E、Pages 驗證、站內分析
+- 設計：`/grill-with-docs` 三輪 24 題定案（spec：docs/superpowers/specs/2026-10-04-ci-pages-analytics.md）；建立 CONTEXT.md 詞彙表（Product／Category／Promotion／Variant／Facet／Cart Item／Analytics Event）。計畫經 Plannotator 審閱核准後逐 task 執行。
+- 分析事件：services/analytics.ts（型別化七種事件、localStorage ring buffer 500 筆、儲存失敗／內容損毀靜默）；由 useSearch／useGoodsDetail／useCart／RootLayout／RouteError 發出，UI 元件零修改。TDD：sink 8、aggregate 7、BarList 3、RouteError 1、cart 互動事件斷言，先紅後綠；36 tests 全綠。
+- `/stats`：純 CSS 長條圖（單一色相、文字用文字色、hover 顯示數值），四個 tile＋四張圖＋錯誤表；Footer「站內統計」連結。live 截圖 docs/checks/task14-stats.jpeg。
+- E2E：Playwright 5 tests（購物主流程含 localStorage 事件斷言、URL 即狀態×2、錯誤路徑×2），對 production preview 跑；selector 走 role／文字，只有 cart badge 用 data-testid。不做視覺快照（維持 README 立場）。本機 5/5，CI 模式 5/5。
+- CI：既有 ci.yml 新增 `e2e` job，`release` 與 `deploy` 改為 needs [check, e2e]。第一次 CI 在 `npm ci` 失敗——macOS 安裝 Playwright 時 lockfile 掉了 @tailwindcss/oxide wasm fallback 的巢狀 @emnapi 項目（linux 需要）；以前一版 lock＋playwright 三筆重建後全綠（docs/checks/task14-ci.jpeg）。semantic-release 自動發 v1.2.0。
+- 驗證 live：根路徑 200、`/cart` 深連結回 404 狀態但 body 為 SPA shell、重整後購物車仍在；Footer → `/stats` 可見五種事件。
+- 取捨：不設 coverage 門檻、不做 Lighthouse CI、不開 branch protection（solo）；分析走 mock sink 而非真 SDK（零真實 API 前提）；觸發維持 main＋PR（沿用既有 workflow）。
