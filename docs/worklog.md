@@ -37,3 +37,8 @@
 - 核心 9 分鐘內完成、視窗充裕 → 執行延伸目標：新增 features/discover/＋DiscoverPage＋一條路由，既有程式碼零修改（僅 router 加 2 行）。
 - 邊界規則實踐：discover 需要 ProductSummary 型別時，不直接 import features/products——改由 services/api 把共用領域型別 re-export，feature 間依然零相互依賴。
 - 截圖 docs/checks/task7-discover.jpeg。
+
+## 總結
+- 計時：first commit 15:06 → 最後 commit 15:17，核心四路由＋購物車＋延伸 /discover 全數完成，無棄守項目。
+- 測試：15 passed（7 service＋6 reducer＋2 互動）；tsc、oxlint、production build 全綠。
+- 與真站差異分析見 README「與真實網站的主要差異」。
