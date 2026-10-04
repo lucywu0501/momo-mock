@@ -60,3 +60,7 @@
 - 右側「超級品牌日」卡片欄（lg 以上顯示）、分類入口改為圓圖 gallery 列（窄螢幕橫向捲動）。
 - favicon 換成 momo 風格桃紅圓角「m」SVG。
 - Agent 驗證：輪播自動轉動與圓點同步（docs/checks/task10-home-gallery.jpeg）。
+
+## Task 11 — 使用者驗收回饋修正（round 4）：輪播無限循環
+- Hero 輪播改為 circular：軌道頭尾各放複製 slide，transitionend 時關閉動畫瞬跳回真實 slide——最後一張按「下一張」持續向右滑，不再倒帶。
+- Agent 以 transform 數值驗證：-4w →（過渡中 -4.73w，方向向右）→ 瞬跳 -1w，圓點同步。
