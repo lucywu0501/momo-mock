@@ -5,7 +5,7 @@ import { formatPrice } from '../shared/utils/formatPrice'
 import { Button } from '../shared/ui/Button'
 
 export default function CartPage() {
-  const { items, total, setQty, remove, clear } = useCart()
+  const { items, total, setQty, remove, clear, checkout } = useCart()
   if (!items.length) return (
     <div className="py-24 text-center">
       <p className="text-gray-500">購物車是空的</p>
@@ -29,7 +29,7 @@ export default function CartPage() {
         <div className="flex justify-between border-b pb-3 text-sm">
           <span>商品總計</span><b className="text-price">${formatPrice(total)}</b>
         </div>
-        <Button className="mt-4 w-full" onClick={() => alert('mock：結帳流程刻意不在本次範圍（見 README tradeoff）')}>
+        <Button className="mt-4 w-full" onClick={() => { checkout(); alert('mock：結帳流程刻意不在本次範圍（見 README tradeoff）') }}>
           前往結帳
         </Button>
       </aside>

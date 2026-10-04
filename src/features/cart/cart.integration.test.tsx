@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { CartProvider } from './store/CartContext'
 import { useCart } from './hooks/useCart'
 import { QuantityStepper } from '../../shared/ui/QuantityStepper'
+import { analytics } from '../../services/analytics'
 
 function Harness() {
   const { add, count } = useCart()
@@ -17,12 +18,16 @@ function Harness() {
 }
 
 describe('cart 互動', () => {
-  it('點加入購物車 → badge 數量 +1', async () => {
+  it('點加入購物車 → badge 數量 +1，並記錄 add_to_cart 事件', async () => {
     localStorage.clear()
+    analytics.clear()
     render(<CartProvider><Harness /></CartProvider>)
     expect(screen.getByTestId('badge')).toHaveTextContent('0')
     await userEvent.click(screen.getByText('加入購物車'))
     expect(screen.getByTestId('badge')).toHaveTextContent('1')
+    const added = analytics.list().filter(e => e.type === 'add_to_cart')
+    expect(added).toHaveLength(1)
+    expect(added[0]).toMatchObject({ productId: 'x', qty: 1 })
   })
 })
 

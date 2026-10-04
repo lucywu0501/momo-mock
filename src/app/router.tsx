@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router'
 import { lazy } from 'react'
 import RootLayout from './RootLayout'
+import { RouteError } from './RouteError'
 
 const HomePage = lazy(() => import('../pages/HomePage'))
 const SearchPage = lazy(() => import('../pages/SearchPage'))
@@ -12,7 +13,7 @@ const NotFoundPage = lazy(() => import('../pages/NotFoundPage'))
 export const router = createBrowserRouter([
   {
     path: '/', element: <RootLayout />,
-    errorElement: <div className="p-12 text-center">頁面發生錯誤，請重新整理。</div>,
+    errorElement: <RouteError />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'search/:keyword', element: <SearchPage /> },

@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { useParams, useSearchParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../../../services/api'
+import { analytics } from '../../../services/analytics'
 import type { CategoryId, SearchParams, SortKey } from '../types'
 
 export function useSearch() {
@@ -22,6 +24,17 @@ export function useSearch() {
     queryKey: ['search', params],
     queryFn: () => api.searchProducts(params),
   })
+
+  // page 物件由 TanStack Query 結構共享，只有結果真的改變才會觸發；回上一頁拿快取不重複記
+  useEffect(() => {
+    if (!page) return
+    analytics.track({
+      type: 'search', keyword: params.keyword,
+      category: params.category, brand: params.brand, tag: params.tag,
+      minPrice: params.minPrice, maxPrice: params.maxPrice,
+      sort: params.sort ?? 'relevance', resultCount: page.total,
+    })
+  }, [page, params.keyword, params.category, params.brand, params.tag, params.minPrice, params.maxPrice, params.sort])
 
   const setParam = (patch: Partial<Omit<SearchParams, 'keyword'>>) => {
     const next = new URLSearchParams(sp)

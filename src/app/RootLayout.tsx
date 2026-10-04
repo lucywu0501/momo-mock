@@ -1,13 +1,16 @@
-import { Link, Outlet, useNavigate } from 'react-router'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router'
 import { Search, ShoppingCart } from 'lucide-react'
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useCart } from '../features/cart/hooks/useCart'
 import { MiniCart } from '../features/cart/components/MiniCart'
 import { CategoryNav } from './CategoryNav'
+import { analytics } from '../services/analytics'
 
 export default function RootLayout() {
   const { count } = useCart()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  useEffect(() => { analytics.track({ type: 'page_view', path: pathname }) }, [pathname])
   const [kw, setKw] = useState('')
   const submit = (e: FormEvent) => {
     e.preventDefault()
@@ -36,7 +39,7 @@ export default function RootLayout() {
           <Link to="/cart" aria-label="購物車" className="relative shrink-0 text-gray-600">
             <ShoppingCart />
             {count > 0 && (
-              <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-momo px-1 text-xs text-white">
+              <span data-testid="cart-badge" className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-momo px-1 text-xs text-white">
                 {count}
               </span>
             )}
