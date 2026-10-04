@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/lucywu0501/momo-mock/compare/v1.1.0...v1.2.0) (2026-10-04)
+
+
+### Bug Fixes
+
+* **ci:** restore cross-platform optional deps in lockfile dropped by macOS install so npm ci works on linux ([59debeb](https://github.com/lucywu0501/momo-mock/commit/59debeb2c920f08282e3e442c429e1023037f5c4))
+
+
+### Features
+
+* **analytics:** emit page_view/search/view_product/cart/error events from hooks and router layer ([e6c3047](https://github.com/lucywu0501/momo-mock/commit/e6c3047d37c4ec3de9323fc204a80d3efb657e7a))
+* **stats:** /stats page with CSS bar charts over analytics events; footer link ([e63467c](https://github.com/lucywu0501/momo-mock/commit/e63467cc504f6b1644d4789bd7c67baae3fd891e))
+* **stats:** pure aggregation functions for analytics events ([664816a](https://github.com/lucywu0501/momo-mock/commit/664816ae59a01b301fc3f98ba2c913597ad59f6f))
+
 # [1.1.0](https://github.com/lucywu0501/momo-mock/compare/v1.0.0...v1.1.0) (2026-10-04)
 
 
