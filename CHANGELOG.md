@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/lucywu0501/momo-mock/compare/v1.0.0...v1.1.0) (2026-10-04)
+
+
+### Features
+
+* **services:** analytics event sink with localStorage ring buffer ([6473a3f](https://github.com/lucywu0501/momo-mock/commit/6473a3f22674bb937f28a70e39fa9dce97f9b884))
+
 # 1.0.0 (2026-10-04)
 
 
