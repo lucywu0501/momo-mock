@@ -34,6 +34,12 @@ export function appendEvent(events: RecordedEvent[], event: RecordedEvent, max =
   return next.length > max ? next.slice(next.length - max) : next
 }
 
+/** 只接受至少有 type 字串與 timestamp 數字的項目；其餘（手動竄改、舊格式）丟棄，避免 /stats 整頁崩潰 */
+const isRecordedEvent = (e: unknown): e is RecordedEvent =>
+  typeof e === 'object' && e !== null
+  && typeof (e as { type?: unknown }).type === 'string'
+  && typeof (e as { timestamp?: unknown }).timestamp === 'number'
+
 export function createLocalStorageSink(
   storage: Storage,
   { now = Date.now, debug = false }: { now?: () => number; debug?: boolean } = {},
@@ -41,7 +47,7 @@ export function createLocalStorageSink(
   const read = (): RecordedEvent[] => {
     try {
       const parsed: unknown = JSON.parse(storage.getItem(ANALYTICS_STORAGE_KEY) ?? '[]')
-      return Array.isArray(parsed) ? (parsed as RecordedEvent[]) : []
+      return Array.isArray(parsed) ? parsed.filter(isRecordedEvent) : []
     } catch {
       return []
     }

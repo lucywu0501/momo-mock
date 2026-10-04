@@ -39,6 +39,11 @@ describe('createLocalStorageSink', () => {
     expect(sink.list()).toHaveLength(1)
   })
 
+  it('陣列內的畸形項目會被過濾，只保留合法事件', () => {
+    localStorage.setItem(ANALYTICS_STORAGE_KEY, '[null,1,{"type":"add_to_cart"},{"type":"page_view","path":"/","timestamp":1}]')
+    expect(createLocalStorageSink(localStorage).list()).toEqual([{ type: 'page_view', path: '/', timestamp: 1 }])
+  })
+
   it('儲存內容不是陣列時視為空', () => {
     localStorage.setItem(ANALYTICS_STORAGE_KEY, '{"a":1}')
     expect(createLocalStorageSink(localStorage).list()).toEqual([])
