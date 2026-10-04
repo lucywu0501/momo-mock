@@ -11,9 +11,9 @@ export class NotFoundError extends Error {
 const toSummary = ({ images: _i, specs: _s, variant: _v, ...summary }: Product): ProductSummary => summary
 
 function matches(p: Product, { keyword, category, brand, tag, minPrice, maxPrice }: SearchParams): boolean {
-  const kw = keyword.trim()
+  const kw = keyword.trim().toLowerCase()
   const catName = CATEGORIES.find(c => c.id === p.category)?.name ?? ''
-  if (kw && !(p.name.includes(kw) || p.brand.includes(kw) || catName.includes(kw))) return false
+  if (kw && ![p.name, p.brand, catName].some(f => f.toLowerCase().includes(kw))) return false
   if (category && p.category !== category) return false
   if (brand && p.brand !== brand) return false
   if (tag && !p.tags.includes(tag)) return false

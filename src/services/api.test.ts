@@ -4,6 +4,12 @@ import { api, NotFoundError, PAGE_SIZE } from './api'
 vi.mock('./mock/delay', () => ({ delay: () => Promise.resolve() }))
 
 describe('searchProducts', () => {
+  it('關鍵字不分大小寫（3c 應等同 3C）', async () => {
+    const lower = await api.searchProducts({ keyword: '3c' })
+    const upper = await api.searchProducts({ keyword: '3C' })
+    expect(lower.total).toBeGreaterThan(0)
+    expect(lower.total).toBe(upper.total)
+  })
   it('依關鍵字過濾並分頁', async () => {
     const page = await api.searchProducts({ keyword: '耳機' })
     expect(page.total).toBeGreaterThan(0)

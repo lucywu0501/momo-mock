@@ -64,3 +64,7 @@
 ## Task 11 — 使用者驗收回饋修正（round 4）：輪播無限循環
 - Hero 輪播改為 circular：軌道頭尾各放複製 slide，transitionend 時關閉動畫瞬跳回真實 slide——最後一張按「下一張」持續向右滑，不再倒帶。
 - Agent 以 transform 數值驗證：-4w →（過渡中 -4.73w，方向向右）→ 瞬跳 -1w，圓點同步。
+
+## Task 12 — Bug fix：搜尋大小寫敏感
+- 使用者回報：搜尋框輸入「3c」查無商品、點分類「3C」正常。根因：matches() 以 String.includes 直接比對（大小寫敏感）；分類點擊走 category id 所以不受影響。
+- 修法：關鍵字與 name/brand/分類名正規化為小寫後比對。TDD：先加失敗測試（3c 應等同 3C）再修，17 tests 全綠；瀏覽器實測 /search/3c → 共 21 件。
