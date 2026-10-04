@@ -68,3 +68,10 @@
 ## Task 12 — Bug fix：搜尋大小寫敏感
 - 使用者回報：搜尋框輸入「3c」查無商品、點分類「3C」正常。根因：matches() 以 String.includes 直接比對（大小寫敏感）；分類點擊走 category id 所以不受影響。
 - 修法：關鍵字與 name/brand/分類名正規化為小寫後比對。TDD：先加失敗測試（3c 應等同 3C）再修，17 tests 全綠；瀏覽器實測 /search/3c → 共 21 件。
+
+## Task 13 — 真站對照評估（parity matrix）
+- 問題：README「與真實網站的主要差異」已過時（寫無輪播、僅分類＋價格篩選），且沒有結構化判準說明 mock 與真站「像」在哪。先以 grill-me 釐清範圍：四軸（功能／版面／互動流程／RWD）、三頁＋加入購物車、桌機 1280 與手機 390、視覺與資料真實度為非目標、缺口只記錄不補。
+- Agent 以 Playwright 開真站首頁／搜尋／商品／逛逛四頁（1280 與 390 各一輪，約 9 分鐘，未被反爬擋下），讀 DOM 結構與互動狀態；截圖存 `docs/momo-ref/*-20261004.jpeg`，同日 mock 截圖存 `docs/checks/task13-*.jpeg`。
+- 發現並修正兩個既有認知：(1) 真站**有** `/discover`（手機底部 tab「逛逛」，6 欄瀑布流商品卡），mock 的「發現好物」不是超出而是簡化；(2) 真站現為單一 RWD 站而非 Adaptive 雙站，但商品頁在 390 仍是 1220px 固定桌機版——mock 商品頁 RWD 反而是「超出」。
+- 其他關鍵觀察：真站搜尋 URL 已是 `/search/:keyword`（與 mock 一致）、商品頁已是 `/product/:id`（mock 的 `/goods` 對齊的是舊路徑）；未選規格按「放入購物車」會被「請選擇商品規格」阻擋，mock 預設第一個規格；手機搜尋頁為無限捲動且卡片改橫式。
+- 產出：`docs/parity.md`（區塊表 36 列＋流程表 20 列，五種狀態）、`docs/adr/0001-parity-scope-and-baseline.md`（四軸、非目標、一次性基準）、README 差異章節改為摘要＋連結。缺口四項（底部 tab bar、搜尋頁手機無限捲動、hero 觸控滑動、header 收合）記入「未來工作」，不開 issue、不實作。
