@@ -45,6 +45,14 @@ export interface Page<T> {
 
 export interface HomeSection { id: string; title: string; products: ProductSummary[] }
 
+export interface HeroBanner {
+  id: string
+  title: string
+  subtitle: string
+  gradient: [string, string]   // CSS 漸層起迄色
+  href: string
+}
+
 export interface FacetCount { value: string; label: string; count: number }
 
 /** 搜尋結果：分頁＋facet 數量（數量依「其他」已選條件連動，與真站 attributesListArea 行為一致） */

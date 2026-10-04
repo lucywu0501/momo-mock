@@ -1,4 +1,4 @@
-import type { Category, FacetCount, HomeSection, Product, ProductSummary, SearchParams, SearchResult } from '../features/products/types'
+import type { Category, FacetCount, HeroBanner, HomeSection, Product, ProductSummary, SearchParams, SearchResult } from '../features/products/types'
 import { CATEGORIES, PRODUCTS } from './mock/data'
 import { delay } from './mock/delay'
 
@@ -67,6 +67,16 @@ export const api = {
     return CATEGORIES
   },
 
+  async getHeroBanners(): Promise<HeroBanner[]> {
+    await delay(150)
+    return [
+      { id: 'free', title: '全站超取 $290 免運', subtitle: '不限品類，天天都免運', gradient: ['#d4007f', '#ff7ab8'], href: '/search/免運?tag=免運' },
+      { id: 'sale', title: '10.10 限時下殺', subtitle: '萬品下殺 8 折起', gradient: ['#7c3aed', '#d4007f'], href: '/search/下殺?tag=限時下殺' },
+      { id: '3c', title: '3C 狂歡祭', subtitle: '耳機・快充・電競 一次買齊', gradient: ['#0ea5e9', '#6366f1'], href: '/search/3C' },
+      { id: 'beauty', title: '美妝保養週', subtitle: '精華・防曬 最高回饋 14%', gradient: ['#f59e0b', '#ef4444'], href: '/search/美妝' },
+    ]
+  },
+
   async getHomeSections(): Promise<HomeSection[]> {
     await delay()
     return [
@@ -78,4 +88,4 @@ export const api = {
 }
 
 // 跨 feature 共用的領域型別由 service 邊界 re-export，維持「feature 之間不互相 import」規則
-export type { Category, FacetCount, HomeSection, Page, Product, ProductSummary, SearchParams, SearchResult, SortKey } from '../features/products/types'
+export type { Category, FacetCount, HeroBanner, HomeSection, Page, Product, ProductSummary, SearchParams, SearchResult, SortKey } from '../features/products/types'

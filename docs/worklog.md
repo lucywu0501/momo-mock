@@ -54,3 +54,9 @@
 - Mock data 擴充 56 → 168 筆（每分類三代 ''/Pro/Plus），讓分頁實際出現；Pagination 改為永遠顯示（單頁時按鈕 disabled，與真站一致）。
 - Header 對齊真站：灰底搜尋框＋深灰「搜尋」按鈕、logo 加 tagline「全站超取$290免運」。
 - 新增 facet 單元測試（16 tests 全綠）；Agent 驗證分頁 URL 同步與 facet 連動（docs/checks/task9-search-facets.jpeg）。
+
+## Task 10 — 使用者驗收回饋修正（round 3）：首頁 gallery
+- Hero 輪播：4 張 banner（自動輪播 4s、hover 暫停、左右箭頭、圓點指示、點擊導向對應搜尋）；banner 資料走 api.getHeroBanners() 維持 service 層一致性。
+- 右側「超級品牌日」卡片欄（lg 以上顯示）、分類入口改為圓圖 gallery 列（窄螢幕橫向捲動）。
+- favicon 換成 momo 風格桃紅圓角「m」SVG。
+- Agent 驗證：輪播自動轉動與圓點同步（docs/checks/task10-home-gallery.jpeg）。
