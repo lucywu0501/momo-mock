@@ -1,0 +1,58 @@
+import type { Category, HomeSection, Page, Product, ProductSummary, SearchParams } from '../features/products/types'
+import { CATEGORIES, PRODUCTS } from './mock/data'
+import { delay } from './mock/delay'
+
+export const PAGE_SIZE = 20
+
+export class NotFoundError extends Error {
+  constructor(id: string) { super(`product ${id} not found`) }
+}
+
+const toSummary = ({ images: _i, specs: _s, variant: _v, ...summary }: Product): ProductSummary => summary
+
+function matches(p: Product, { keyword, category, minPrice, maxPrice }: SearchParams): boolean {
+  const kw = keyword.trim()
+  const catName = CATEGORIES.find(c => c.id === p.category)?.name ?? ''
+  if (kw && !(p.name.includes(kw) || p.brand.includes(kw) || catName.includes(kw))) return false
+  if (category && p.category !== category) return false
+  if (minPrice != null && p.price < minPrice) return false
+  if (maxPrice != null && p.price > maxPrice) return false
+  return true
+}
+
+export const api = {
+  async searchProducts(params: SearchParams): Promise<Page<ProductSummary>> {
+    await delay()
+    let hits = PRODUCTS.filter(p => matches(p, params))
+    if (params.sort === 'priceAsc') hits = [...hits].sort((a, b) => a.price - b.price)
+    if (params.sort === 'priceDesc') hits = [...hits].sort((a, b) => b.price - a.price)
+    const page = params.page ?? 1
+    const start = (page - 1) * PAGE_SIZE
+    return {
+      items: hits.slice(start, start + PAGE_SIZE).map(toSummary),
+      total: hits.length, page, pageSize: PAGE_SIZE,
+      totalPages: Math.ceil(hits.length / PAGE_SIZE),
+    }
+  },
+
+  async getProduct(id: string): Promise<Product> {
+    await delay()
+    const p = PRODUCTS.find(p => p.id === id)
+    if (!p) throw new NotFoundError(id)
+    return p
+  },
+
+  async getCategories(): Promise<Category[]> {
+    await delay(100)
+    return CATEGORIES
+  },
+
+  async getHomeSections(): Promise<HomeSection[]> {
+    await delay()
+    return [
+      { id: 'hot', title: '限時下殺', products: PRODUCTS.filter(p => p.tags.includes('限時下殺')).slice(0, 10).map(toSummary) },
+      { id: '3c', title: '3C 達人', products: PRODUCTS.filter(p => p.category === '3c').map(toSummary) },
+      { id: 'beauty', title: '美妝保養', products: PRODUCTS.filter(p => p.category === 'beauty').map(toSummary) },
+    ]
+  },
+}
