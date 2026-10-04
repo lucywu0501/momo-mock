@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+@theme {
+  --color-momo: #d4007f;
+  --color-price: #e60012;
+}
