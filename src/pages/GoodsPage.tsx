@@ -9,6 +9,7 @@ import { Button } from '../shared/ui/Button'
 import { PriceTag } from '../shared/ui/PriceTag'
 import { Skeleton } from '../shared/ui/Skeleton'
 import { QuantityStepper } from '../shared/ui/QuantityStepper'
+import { Breadcrumb } from '../shared/ui/Breadcrumb'
 
 export default function GoodsPage() {
   const { goodsId = '' } = useParams()
@@ -37,7 +38,7 @@ export default function GoodsPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <nav className="text-sm text-gray-400">首頁 \ {p.brand} \ <span className="text-gray-700">{p.name}</span></nav>
+      <Breadcrumb items={[{ label: '首頁', to: '/' }, { label: p.brand, to: `/search/${p.brand}` }, { label: p.name }]} />
       <div className="grid gap-8 rounded-lg bg-white p-4 md:grid-cols-2 md:p-6">
         <Gallery images={p.images} alt={p.name} />
         <div className="flex flex-col gap-4">

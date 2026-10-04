@@ -3,6 +3,7 @@ import { Search, ShoppingCart } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { useCart } from '../features/cart/hooks/useCart'
 import { MiniCart } from '../features/cart/components/MiniCart'
+import { CategoryNav } from './CategoryNav'
 
 export default function RootLayout() {
   const { count } = useCart()
@@ -36,6 +37,7 @@ export default function RootLayout() {
             )}
           </Link>
         </div>
+        <CategoryNav />
       </header>
       <main className="mx-auto max-w-6xl px-4 py-6">
         <Outlet />
