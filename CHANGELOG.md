@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/lucywu0501/momo-mock/compare/v1.2.1...v1.2.2) (2026-10-04)
+
+
+### Bug Fixes
+
+* **stats:** live-updating /stats via sink subscription, tiles by event type, stable error keys; lazy storage resolution, aria-pressed sort buttons, playwright browser cache in CI ([4df1a30](https://github.com/lucywu0501/momo-mock/commit/4df1a3007988ad56c7899258ef1323039e1468c0))
+
 ## [1.2.1](https://github.com/lucywu0501/momo-mock/compare/v1.2.0...v1.2.1) (2026-10-04)
 
 
