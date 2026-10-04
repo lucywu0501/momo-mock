@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/lucywu0501/momo-mock/compare/v1.2.0...v1.2.1) (2026-10-04)
+
+
+### Bug Fixes
+
+* **analytics:** drop malformed entries when reading the event store so /stats cannot crash on tampered data ([29e6b9c](https://github.com/lucywu0501/momo-mock/commit/29e6b9c6e69186c07339ac32782be04d0e78f44f))
+
 # [1.2.0](https://github.com/lucywu0501/momo-mock/compare/v1.1.0...v1.2.0) (2026-10-04)
 
 
