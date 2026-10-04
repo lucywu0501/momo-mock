@@ -42,3 +42,9 @@
 - 計時：first commit 15:06 → 最後 commit 15:17，核心四路由＋購物車＋延伸 /discover 全數完成，無棄守項目。
 - 測試：15 passed（7 service＋6 reducer＋2 互動）；tsc、oxlint、production build 全綠。
 - 與真站差異分析見 README「與真實網站的主要差異」。
+
+## Task 8 — 使用者驗收回饋修正（round 1）
+- Breadcrumb 改為可點的共用元件（shared/ui/Breadcrumb）；商品頁品牌 crumb 連到品牌搜尋。
+- 新增 momo 式類別導覽列（app/CategoryNav，NavLink active 桃紅底線、窄螢幕橫向捲動）。
+- 商品卡向真站看齊：星數評價（確定性 mock）＋折數 badge；卡片加 CSS content-visibility:auto（離屏卡片跳過 render，56 筆規模下比引入 react-window 划算——windowing 列入演進方向）。
+- 分頁維持與真站桌面版一致（使用者確認網站版做分頁；mobile 無限捲動列入演進方向）。

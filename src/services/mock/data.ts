@@ -37,6 +37,8 @@ function makeProduct(cat: CategoryId, i: number): Product {
     price, listPrice: hasPromo ? Math.round(price * 1.25) : undefined,
     image, images: [image, `https://picsum.photos/seed/${id}-b/400/400`, `https://picsum.photos/seed/${id}-c/400/400`],
     inStock: i !== 5, // 每分類第 6 筆缺貨（驗證邊界 UI）
+    rating: Math.round((3.5 + ((i * 7 + cat.length) % 15) / 10) * 10) / 10,
+    reviews: (i * 137 + cat.length * 53) % 2000,
     tags: hasPromo ? (i % 2 === 0 ? ['限時下殺'] : ['免運']) : [],
     specs: [`${brand} 原廠公司貨`, '7 天鑑賞期', '保固一年', '台灣出貨'],
     variant: i % 2 === 0 ? { label: '顏色', options: ['白色', '黑色', '粉色'] } : undefined,

@@ -12,6 +12,8 @@ export interface ProductSummary {
   category: CategoryId
   inStock: boolean
   tags: string[]       // 促銷 badge，如「限時下殺」
+  rating: number       // 1 位小數，3.5–4.9
+  reviews: number      // 評價數
 }
 
 export interface Product extends ProductSummary {
